@@ -1,14 +1,16 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+import os
 from flask_cors import CORS
 import joblib
 import pandas as pd
 
+load_dotenv()
 app = Flask(__name__)
-CORS(app)  # ✅ Enable CORS
+CORS(app)
 
-# 📌 Load Models
+app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
 
-# 1. Close Price Prediction
 rf_close_model = joblib.load('optimized_rf_model.pkl')
 scaler_close = joblib.load('scaler.pkl')
 pca_close = joblib.load('pca.pkl')
@@ -96,4 +98,4 @@ def predict_cluster():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run()
