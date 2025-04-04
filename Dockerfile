@@ -1,14 +1,9 @@
-# Use the official Python image
-FROM python:3.10-slim
+FROM python:3.9.4-bookworm
+ENV PYTHONUNBUFFERED True
+ENV APP_HOME /back-end
+WORKDIR $APP_HOME
+COPY . ./
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Set working directory
-WORKDIR /app
-
-# Copy files
-COPY . .
-
-# Install dependencies
-RUN pip install -r requirements.txt
-
-# Command to run the app
-CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
